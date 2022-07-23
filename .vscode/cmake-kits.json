@@ -1,0 +1,13 @@
+[
+    {
+        "name": "GCC 11.2.1 xpack-arm-none-eabi",
+        "compilers" : {
+            "C": "C:\\Users\\moskw\\AppData\\Roaming\\xPacks\\arm-none-eabi-gcc\\11.2.1-1.2\\bin\\arm-none-eabi-gcc.exe",
+            "CXX": "C:\\Users\\moskw\\AppData\\Roaming\\xPacks\\arm-none-eabi-gcc\\11.2.1-1.2\\bin\\arm-none-eabi-g++.exe"
+        },
+        "preferredGenerator" : {
+            "name": "Unix Makefiles"
+        },
+        "toolchainFile": "arm-none-eabi-gcc.cmake"
+    }
+]
