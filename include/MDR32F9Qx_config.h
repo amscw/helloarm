@@ -85,6 +85,32 @@
 #define HSE2_Value      ((uint32_t)25000000)
 #define LSI_Value       ((uint32_t)40000)
 #define LSE_Value       ((uint32_t)32768)
+#define HSE_C1_SEL_Value  RST_CLK_RTC_CLOCK_HSE_SEL_HSE_DIV_8
+
+#if defined (USE_MDR1986VE9x)
+    /* 80 MHz */
+    #define BKP_REG_0E_LOW_Value        6
+    #define PLL_CPU_MUL_Value           9  /* x10 */
+    #define EEPROM_CMD_DELAY_Value      3
+
+#elif defined (USE_MDR1986VE1T) || defined (USE_MDR1986VE3)
+    #ifdef USE_RTT
+        /* RTT works only with EEPROM_CMD_DELAY == 0,
+           so CPU_FREQ must be less 25 MHz */
+        /* 24 MHz */
+        #define BKP_REG_0E_LOW_Value    5
+        #define PLL_CPU_MUL_Value       2  /* x3 */
+        #define EEPROM_CMD_DELAY_Value  0
+
+    #else  /* don't USE_RTT */
+        /* 80 MHz */
+        #define BKP_REG_0E_LOW_Value    6
+        #define PLL_CPU_MUL_Value       9  /* x10 */
+        #define EEPROM_CMD_DELAY_Value  3
+
+    #endif
+    #define BASIC_TIMER_PSG_Value       PLL_CPU_MUL_Value
+#endif
 
 /* RST_CLK frequencies startup timeouts settings */
 #define HSEonTimeOut    ((uint16_t)0x0600)
