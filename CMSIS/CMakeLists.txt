@@ -10,7 +10,7 @@ list(APPEND INCLUDE_DIR_FOR_CMSIS ${CMAKE_SOURCE_DIR}/MDR32F9Qx_StdPeriph_Driver
 
 set(SOURCE_DIR_CMSIS ${CMAKE_SOURCE_DIR}/CMSIS/Device/MDR32F9Qx/startup)
 
-add_library(cmsis STATIC 
+add_library(${CMSIS_TARGET_NAME} STATIC 
     ${SOURCE_DIR_CMSIS}/startup_MDR32F9Qx.s 
     ${SOURCE_DIR_CMSIS}/system_MDR32F9Qx.c
 )
