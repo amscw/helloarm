@@ -44,7 +44,7 @@
 #define __MDR32F9Qx_CONFIG_H
 
 #if ((__CC_ARM == 0) || (__ARMCC_VERSION < 5000000))
-	#include "MDR32F9Qx_board.h"
+	// #include "MDR32F9Qx_board.h"
 #endif
 #include "MDR32F9Qx_lib.h"
 #include <stdint.h>
