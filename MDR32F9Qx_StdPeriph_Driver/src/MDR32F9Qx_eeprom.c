@@ -1,27 +1,8 @@
 /**
-  ******************************************************************************
-  * @file    MDR32F9Qx_eeprom.c
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    11/06/2010
-  * @brief   This file contains all the EEPROM firmware functions.
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2010 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_eeprom.c
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_eeprom.h"
 
 
@@ -51,7 +32,13 @@
 #define IS_FOUR_BYTE_ALLIGNED(ADDR)     ((ADDR & 3) == 0)
 
 #define DELAY_LOOP_CYCLES               (8UL)
-#define GET_US_LOOPS(N)                 ((uint32_t)((float)(N) * FLASH_PROG_FREQ_MHZ / DELAY_LOOP_CYCLES))
+
+#ifndef FLASH_PROG_FREQ_MHZ
+#  error "Please set a EEPROM programming the max MCU frequency. Define FLASH_PROG_FREQ_MHZ in MDR32F9Qx_config.h file"
+#endif
+
+#define GET_US_LOOPS(N)                 ((uint32_t)((double)(N) * FLASH_PROG_FREQ_MHZ / DELAY_LOOP_CYCLES + 1.0))
+
 
 /** @} */ /* End of group EEPROM_Private_Macros */
 
@@ -59,7 +46,7 @@
   * @{
   */
 
-__RAMFUNC static void ProgramDelay(uint32_t Loops) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
+__RAMFUNC static void ProgramDelay(uint32_t Loops) __RAMFUNCSECTION;
 
 /**
   * @brief  Program delay.
@@ -387,13 +374,68 @@ __RAMFUNC void EEPROM_ProgramWord(uint32_t Address, uint32_t BankSelector, uint3
   MDR_EEPROM->KEY = 0;
 }
 
+
+__RAMFUNC void EEPROM_ProgramWordsBlock(uint32_t Address, uint32_t BankSelector, uint32_t *DataArr, uint32_t Num)
+{
+	uint32_t Command;
+	uint32_t Addr;	
+	const uint32_t MaxSectors = 4;
+	assert_param(IS_EEPROM_BANK_SELECTOR(BankSelector));
+	assert_param(IS_FOUR_BYTE_ALLIGNED(Address));
+
+	MDR_EEPROM->KEY = EEPROM_REG_ACCESS_KEY;
+	BankSelector = (BankSelector == EEPROM_Info_Bank_Select) ? EEPROM_CMD_IFREN : 0;
+	
+	for(uint32_t j = 0; j < MaxSectors; j++) {
+		Addr = Address + j*sizeof(DataArr[0]);		
+		Command = MDR_EEPROM->CMD & EEPROM_CMD_DELAY_Msk;
+		Command |= EEPROM_CMD_CON | BankSelector;
+		MDR_EEPROM->CMD = Command;
+		MDR_EEPROM->ADR = Addr;
+		Command |= EEPROM_CMD_XE | EEPROM_CMD_PROG;
+		MDR_EEPROM->CMD = Command;
+		ProgramDelay(GET_US_LOOPS(5));                /* Wait for 5 us */
+		Command |= EEPROM_CMD_NVSTR;
+		MDR_EEPROM->CMD = Command;
+		ProgramDelay(GET_US_LOOPS(10));               /* Wait for 10 us */
+
+		for(uint32_t i = 0;; i++) {
+			uint32_t indx = i*MaxSectors + j;
+			if (indx >= Num)
+				break;
+			MDR_EEPROM->DI  = DataArr[indx];
+			MDR_EEPROM->ADR = Addr;
+			Command |= EEPROM_CMD_YE;
+			MDR_EEPROM->CMD = Command;
+			ProgramDelay(GET_US_LOOPS(40));               /* Wait for 40 us */
+			Command &= ~EEPROM_CMD_YE;
+			MDR_EEPROM->CMD = Command;
+			ProgramDelay(GET_US_LOOPS(0));
+			Addr+=sizeof(DataArr[0])*MaxSectors;
+		}
+
+
+		Command &= ~EEPROM_CMD_PROG;
+		MDR_EEPROM->CMD = Command;
+		ProgramDelay(GET_US_LOOPS(5));                /* Wait for 5 us */
+		Command &= ~(EEPROM_CMD_XE | EEPROM_CMD_NVSTR);
+		MDR_EEPROM->CMD = Command;
+		ProgramDelay(GET_US_LOOPS(1));                /* Wait for 1 us */
+	
+		MDR_EEPROM->CMD = Command & EEPROM_CMD_DELAY_Msk;
+	}	
+	MDR_EEPROM->KEY = 0;
+	ProgramDelay(GET_US_LOOPS(10));                /* Wait for 10 us */  	
+}
+
+
 /** @} */ /* End of group EEPROM_Private_Functions */
 
 /** @} */ /* End of group EEPROM */
 
 /** @} */ /* End of group __MDR32F9Qx_StdPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2010 Phyton *********************************
+/*
 *
 * END OF FILE MDR32F9Qx_eeprom.c */
 

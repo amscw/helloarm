@@ -1,23 +1,4 @@
 /**
-  ******************************************************************************
-  * @file    MDR32F9Qx_eeprom.h
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    11/06/2010
-  * @brief   This file contains all the functions prototypes for the EEPROM
-  *          firmware library.
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2010 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_eeprom.h
   */
 
@@ -30,6 +11,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_lib.h"
 
 /** @addtogroup __MDR32F9Qx_StdPeriph_Driver MDR32F9Qx Standard Peripherial Driver
@@ -113,20 +95,27 @@ extern "C" {
   #define __RAMFUNC       __ramfunc
 #elif defined ( __CC_ARM )
   #define __RAMFUNC
-#elif defined ( __GNUC__)
- #define __RAMFUNC
+#elif defined ( __GNUC__ )
+  #define __RAMFUNC       __attribute__((section(".ramfunc"))) __attribute__((__noinline__))
 #endif
 
-void EEPROM_SetLatency ( uint32_t EEPROM_Latency );
+#if defined ( __GNUC__ )
+  #define __RAMFUNCSECTION
+#else
+  #define __RAMFUNCSECTION  __attribute__((section("EXECUTABLE_MEMORY_SECTION")))
+#endif
 
-__RAMFUNC uint8_t EEPROM_ReadByte (uint32_t Address, uint32_t BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC uint16_t EEPROM_ReadHalfWord(uint32_t Address, uint32_t BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC uint32_t EEPROM_ReadWord(uint32_t Address, uint32_t BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ErasePage(uint32_t Address, uint32_t BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_EraseAllPages(uint32_t BankSelector) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ProgramByte(uint32_t Address, uint32_t BankSelector, uint32_t Data) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ProgramHalfWord(uint32_t Address, uint32_t BankSelector, uint32_t Data) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
-__RAMFUNC void EEPROM_ProgramWord(uint32_t Address, uint32_t BankSelector, uint32_t Data) __attribute__((section("EXECUTABLE_MEMORY_SECTION")));
+void EEPROM_SetLatency(uint32_t EEPROM_Latency);
+
+__RAMFUNC uint8_t EEPROM_ReadByte(uint32_t Address, uint32_t BankSelector) __RAMFUNCSECTION;
+__RAMFUNC uint16_t EEPROM_ReadHalfWord(uint32_t Address, uint32_t BankSelector) __RAMFUNCSECTION;
+__RAMFUNC uint32_t EEPROM_ReadWord(uint32_t Address, uint32_t BankSelector) __RAMFUNCSECTION;
+__RAMFUNC void EEPROM_ErasePage(uint32_t Address, uint32_t BankSelector) __RAMFUNCSECTION;
+__RAMFUNC void EEPROM_EraseAllPages(uint32_t BankSelector) __RAMFUNCSECTION;
+__RAMFUNC void EEPROM_ProgramByte(uint32_t Address, uint32_t BankSelector, uint32_t Data) __RAMFUNCSECTION;
+__RAMFUNC void EEPROM_ProgramHalfWord(uint32_t Address, uint32_t BankSelector, uint32_t Data) __RAMFUNCSECTION;
+__RAMFUNC void EEPROM_ProgramWord(uint32_t Address, uint32_t BankSelector, uint32_t Data) __RAMFUNCSECTION;
+__RAMFUNC void EEPROM_ProgramWordsBlock(uint32_t Address, uint32_t BankSelector, uint32_t *DataArr, uint32_t Num) __RAMFUNCSECTION;
 
 /** @} */ /* End of group EEPROM_Functions_not_allowed_to_be_located_in_Flash */
 
@@ -142,7 +131,7 @@ __RAMFUNC void EEPROM_ProgramWord(uint32_t Address, uint32_t BankSelector, uint3
 
 #endif /* __MDR32F9Qx_EEPROM_H */
 
-/******************* (C) COPYRIGHT 2010 Phyton *********************************
+/*
 *
 * END OF FILE MDR32F9Qx_eeprom.h */
 

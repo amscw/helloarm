@@ -1,23 +1,4 @@
 /**
-  ******************************************************************************
-  * @file	 MDR32F9Qx_keypad.c
-  * @author	 sidorov.a
-  * @version V1.4.0
-  * @date    22.10.2013
-  * @brief   This file contains all the KEYPAD firmware functions.
-  ******************************************************************************
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2013 Milandr </center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_keypad.c
   */
 
@@ -272,16 +253,17 @@ uint32_t KEYPAD_GetPressedSecondKey(void)
 BitStatus KEYPAD_GetSwitchStatus(uint32_t switch_number)
 {
 	FlagStatus bitstatus;
-	uint32_t row, column, switch_col, bit_number;
-
-	/* Get number row in keyboard */
-	row = (MDR_KEYPAD->KEYPAD_CR & KEYPAD_CR_KEY_ROW_Msk) >> KEYPAD_CR_KEY_ROW_Pos;
-	/* Get number column in keyboard */
-	column = (MDR_KEYPAD->KEYPAD_CR & KEYPAD_CR_KEY_COL_Msk) >> KEYPAD_CR_KEY_COL_Pos;
-	/* Get number of the first switch in keyboard */
-	switch_col = (MDR_KEYPAD->KEYPAD_CR & KEYPAD_CR_KEY_SWCOL_Msk) >> KEYPAD_CR_KEY_SWCOL_Pos;
-	/* Compute the bit posishion of the first switch */
-	bit_number = ((column - switch_col + 1)*(row + 1) - 1);
+    /* FIXME unnecessary code */
+	//uint32_t row, column, switch_col, bit_number;
+    //
+	///* Get number row in keyboard */
+	//row = (MDR_KEYPAD->KEYPAD_CR & KEYPAD_CR_KEY_ROW_Msk) >> KEYPAD_CR_KEY_ROW_Pos;
+	///* Get number column in keyboard */
+	//column = (MDR_KEYPAD->KEYPAD_CR & KEYPAD_CR_KEY_COL_Msk) >> KEYPAD_CR_KEY_COL_Pos;
+	///* Get number of the first switch in keyboard */
+	//switch_col = (MDR_KEYPAD->KEYPAD_CR & KEYPAD_CR_KEY_SWCOL_Msk) >> KEYPAD_CR_KEY_SWCOL_Pos;
+	///* Compute the bit posishion of the first switch */
+	//bit_number = ((column - switch_col + 1)*(row + 1) - 1);
 
 	/* Get the status of the requested switch */
 	if(MDR_KEYPAD->KEYPAD_SWR[switch_number/32] & (1 << (switch_number%32))){
@@ -320,6 +302,6 @@ void KEYPAD_ITCmd(FunctionalState NewState)
 
 /** @} */ /* End of group __MDR32F9Qx_StdPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2013 Milandr ********************************
+/*
 *
 * END OF FILE MDR32F9Qx_keypad.c */

@@ -39,6 +39,8 @@
 
 #include "MDR32Fx.h"
 #include "MDR32F9Qx_config.h"
+#include "MDR32F9Qx_eeprom.h"
+#include "MDR32F9Qx_rst_clk.h"
 
 /** @} */ /* End of group System_Private_Includes */
 
@@ -130,27 +132,32 @@ void SystemCoreClockUpdate (void)
   */
 void SystemInit (void)
 {
-  /* Reset the RST clock configuration to the default reset state */
-  SCB->VTOR = 0x08000000;
-  /* Reset all clock but RST_CLK & BKP_CLC bits */
-  MDR_RST_CLK->PER_CLOCK   = (uint32_t)0x8000010;
+#ifndef MDR_NO_RST_VTOR
+	SCB->VTOR = 0x08000000;
+#endif
 
-  /* Reset CPU_CLOCK bits */
-  MDR_RST_CLK->CPU_CLOCK   &= (uint32_t)0x00000000;
+	// Set EEPROM Latency for MCU Clock up to 100 MHz
+	EEPROM_SetLatency(EEPROM_Latency_3);
 
-  /* Reset PLL_CONTROL bits */
-  MDR_RST_CLK->PLL_CONTROL &= (uint32_t)0x00000000;
+	// Enable HSE (CPU_C1)
+	RST_CLK_HSEconfig(RST_CLK_HSE_ON);
+	while (RST_CLK_HSEstatus() != SUCCESS);
 
-  /* Reset HSEON and HSEBYP bits */
-  MDR_RST_CLK->HS_CONTROL  &= (uint32_t)0x00000000;
+	// Enable PLL (CPU_C2)
+	RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul10);
+	RST_CLK_CPU_PLLcmd(ENABLE);
+	while( RST_CLK_CPU_PLLstatus() != SUCCESS);
+	RST_CLK_CPU_PLLuse(ENABLE);
 
-  /* Reset USB_CLOCK bits */
-  MDR_RST_CLK->USB_CLOCK   &= (uint32_t)0x00000000;
+	// Set clock prescaler (CPU_C3) & source (HCLK/CPU_CLK)
+	RST_CLK_CPUclkPrescaler(RST_CLK_CPUclkDIV1);
+	RST_CLK_CPUclkSelection(RST_CLK_CPUclkCPU_C3);
 
-  /* Reset ADC_MCO_CLOCK bits */
-  MDR_RST_CLK->ADC_MCO_CLOCK   &= (uint32_t)0x00000000;
+	// Update the SystemCoreClock
+	SystemCoreClockUpdate();
 
-  SystemCoreClockUpdate();
+  extern void DWT_Init(void);
+  DWT_Init();
 }
 
 /** @} */ /* End of group __MDR32F9QX_System_Private_Functions */

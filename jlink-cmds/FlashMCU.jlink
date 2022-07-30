@@ -1,0 +1,7 @@
+r
+erase
+h
+loadfile build\basebrd_fw.bin, 0x08000000
+verifybin build\basebrd_fw.bin, 0x08000000
+r
+q

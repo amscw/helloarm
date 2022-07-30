@@ -1,24 +1,4 @@
 /**
-  ******************************************************************************
-  * @file    USB_Library\MDR32F9Qx_usb_device.h
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    21/02/2011
-  * @brief   This file contains all the interface types and function prototypes
-  *          of the EndPoint and Device drivers as of USB Specification Rev.2.0
-  *          Chapter 9
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_usb_device.h
   */
 
@@ -205,7 +185,7 @@ typedef USB_Result (*USB_EP_Error_Handler)(USB_EP_TypeDef EPx, uint32_t STS, uin
   * @{
   */
 
-#define MAX_PACKET_SIZE                      32
+#define MAX_PACKET_SIZE                      64
 
 /** @} */ /* End of group USB_EndPoint_Exported_Constants */
 
@@ -310,7 +290,7 @@ typedef struct {
   */
 
 typedef struct {
-  uint32_t PULL;                           /*!< This member configures the D+ è D- line pulling
+  uint32_t PULL;                           /*!< This member configures the D+ ï¿½ D- line pulling
                                                 This member can be combination of the following values:
                                                 USB_HSCR_DM_PULLDOWN_Set: D- line pull down
                                                 USB_HSCR_DM_PULLUP_Set:   D- line pull up
@@ -431,6 +411,6 @@ USB_Result USB_DeviceDummyDataError(USB_EP_TypeDef EPx, uint32_t STS, uint32_t T
 
 #endif /* __MDR32F9Qx_USB_DEVICE_H */
 
-/******************* (C) COPYRIGHT 2011 Phyton *********
+/*
 *
 * END OF FILE MDR32F9Qx_usb_device.h */

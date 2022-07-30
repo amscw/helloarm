@@ -1,24 +1,4 @@
 /**
-  ******************************************************************************
-  * @file	 MDR32F9Qx_eth.h
-  * @author	 sidorov.a
-  * @version V1.4.0
-  * @date    26.04.2013
-  * @brief   This file contains all the the functions prototypes for the
-  * 		 ethernet firmware library.
-  ******************************************************************************
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2013 Milandr </center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_eth.h
   */
 
@@ -31,9 +11,9 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_lib.h"
 
-#if defined (USE_MDR1986VE1T) || defined (USE_MDR1986VE3)
 /** @addtogroup __MDR32F9Qx_StdPeriph_Driver MDR32F9Qx Standard Peripherial Driver
   * @{
   */
@@ -69,7 +49,7 @@ typedef struct {
 	  * @brief MAC General Config
 	  */
 
-	uint32_t			ETH_Dilimiter;						/*!< Defines the boundaries of the transmitter and receiver buffers.
+	uint32_t			ETH_Delimiter;						/*!< Defines the boundaries of the transmitter and receiver buffers.
 													 	 	 	 This parameter can be a value from 0 to 0x1FFF. */
 	uint32_t			ETH_DBG_Mode;						/*!< Select the mode of operation in debug mode.
 													 	 	 	 This parameter can be a value of @ref ETH_DBG_MODE. */
@@ -164,7 +144,7 @@ typedef struct {
 
 	uint32_t 			ETH_IPG;							/*!< The value of inter-packet interval for full duplex
 																 This parameter can be a value from 0 to 0xFFFF. */
-	uint32_t 			ETH_PSC;							/*!< Prescaler value increment values ​​BAG and JitterWnd.
+	uint32_t 			ETH_PSC;							/*!< Prescaler value increment values for BAG and JitterWnd.
 																 This parameter can be a value from 0 to 0xFFFF. */
 	uint32_t 			ETH_BAG;							/*!< The period value of the packets.
 																 This parameter can be a value from 0 to 0xFFFF. */
@@ -556,6 +536,8 @@ void ETH_DMAPrepare(void);
 void ETH_DMAFrameRx(uint32_t * DstBuf, uint32_t BufferSize, uint32_t * SrcBuf);
 void ETH_DMAFrameTx(uint32_t * DstBuf, uint32_t BufferSize, uint32_t *  SrcBuf);
 
+FlagStatus ETH_GetFlagStatus(MDR_ETHERNET_TypeDef * ETHERNETx, uint16_t ETH_MAC_FLAG);
+
 /** @} */ /* End of group ETH_Private_Function_Prototypes */
 
 /** @} */ /* End of group ETHERNET */
@@ -566,9 +548,8 @@ void ETH_DMAFrameTx(uint32_t * DstBuf, uint32_t BufferSize, uint32_t *  SrcBuf);
 } // extern "C" block end
 #endif
 
-#endif /*#if defined (USE_MDR1986VE1T) || defined (USE_MDR1986VE3)*/
 #endif /* MDR32F9QX_ETH_H_ */
 
-/******************* (C) COPYRIGHT 2013 Milandr ********************************
+/*
 *
 * END OF FILE MDR32F9Qx_eth.h */

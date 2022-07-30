@@ -1,24 +1,5 @@
 /**
-  ******************************************************************************
-  * @file	 MDR32F9Qx_arinc429R.c
-  * @author	 sidorov.a
-  * @version V1.4.0
-  * @date    15.04.2013
-  * @brief   This file contains all the ARINC429R firmware functions.
-  ******************************************************************************
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2013 Milandr </center></h2>
-  ******************************************************************************
-  * FILE MDR32F9Qx_arinc429R.c
+  * FILE MDR32F9Qx_arinc429r.c
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -42,7 +23,7 @@
   * @{
   */
 
-#define IS_ARINC429R_BRG(BRG)		(((BRG) >= 0 ) && ((BRG) <= 0x7F))
+#define IS_ARINC429R_BRG(BRG)		((BRG) <= 0x7F)
 #define IS_ARINC429R_DIV(DIV)		((DIV) <= 0xFF)
 #define IS_ARINC429R_LABLE(LABLE)	((LABLE & 0xFF) == 0)
 
@@ -81,7 +62,7 @@ void ARINC429R_BRG_Init(uint32_t ARINC429R_BRG)
 	/* Set the new value of the divisor */
 	tmpreg_CONTROL1 |= ((ARINC429R_BRG & 0x0F )<< ARINC429R_CONTROL1_DIV_Pos);
 	tmpreg_CONTROL2 |= (((ARINC429R_BRG & 0x70)>>4) << ARINC429R_CONTROL2_DIV_6_4_Pos);
-	
+
 	/* Write the control1 and control2 ARINC register */
 	ARINC429Rx->CONTROL1 = tmpreg_CONTROL1;
 	ARINC429Rx->CONTROL2 = tmpreg_CONTROL2;
@@ -285,7 +266,6 @@ void ARINC429R_ITConfig(uint32_t ARINC429R_IT, FunctionalState NewState)
 
 	/* Check the parameters */
 	assert_param(IS_ARINC429R_IT(ARINC429R_IT));
-	assert_param(IS_ARINC429R_IT(ARINC429R_IT));
 	assert_param(IS_FUNCTIONAL_STATE(NewState));
 
 	ARINC429Rx = MDR_ARINC429R;
@@ -391,7 +371,9 @@ FlagStatus ARINC429R_GetFlagStatus(uint32_t ARINC429R_CHANNELx, uint32_t ARINC42
 		case ARINC429R_FLAG_FF:
 			bitstatus = (ARINC429Rx->STATUS2 & (1 << (ARINC429R_STATUS2_FF1_Pos + ARINC429R_CHANNELx))) == 0 ? RESET : SET;
 			break;
-
+		default:
+			bitstatus = RESET;
+			break;
 	}
 	return (bitstatus);
 }
@@ -525,6 +507,6 @@ uint32_t ARINC429R_ReceiveDataDirect(uint32_t ARINC429R_CHANNELx)
 
 /** @} */ /* End of group __MDR32F9Qx_StdPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2013 Milandr ********************************
+/*
 *
-* END OF FILE MDR32F9Qx_arinc429R.c */
+* END OF FILE MDR32F9Qx_arinc429r.c */

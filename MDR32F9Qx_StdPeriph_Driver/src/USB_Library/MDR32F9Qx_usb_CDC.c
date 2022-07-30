@@ -1,31 +1,7 @@
 /**
-  ******************************************************************************
-  * @file    USB_Library\MDR32F9Qx_usb_CDC.c
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    02/03/2011
-  * @brief   This file contains the implementation of the Communication Device
-  *          Class driver as of:
-  *          [1] Communication Device Class driver as of USB Class Definitions
-  *              for Communications Devices Rev.1.2 (Errata 1);
-  *          [2] USB Communication Class Subclass Specification for PSTN
-  *              Devices Rev.1.2.
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_usb_device.c
   */
 
-/* Includes ------------------------------------------------------------------*/
 /* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_usb_handlers.h"
@@ -454,6 +430,8 @@ USB_Result USB_CDC_GetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLEN
   uint32_t length;
   USB_Result result = USB_SUCCESS;
 
+  (void)wINDEX;
+
   /* Only 0 configuration is supported; for device request this field must be 0 */
   if ((wVALUE & 0xFF) != 0)
   {
@@ -499,8 +477,13 @@ USB_Result USB_CDC_ClassRequest(void)
 {
   USB_Result result = USB_SUCCESS;
 
-  uint16_t wValue = USB_CurrentSetupPacket.wValue,
-           wIndex = USB_CurrentSetupPacket.wIndex,
+#if defined (USB_CDC_COMM_FEATURE_SUPPORTED) ||\
+    defined (USB_CDC_CONTROL_LINE_STATE_SUPPORTED) ||\
+    defined (USB_CDC_LINE_BREAK_SUPPORTED)
+  uint16_t wValue = USB_CurrentSetupPacket.wValue;
+  (void)wValue;
+#endif
+  uint16_t wIndex = USB_CurrentSetupPacket.wIndex,
            wLength = USB_CurrentSetupPacket.wLength;
 
   /* Specific requests */
@@ -630,6 +613,10 @@ USB_Result USB_CDC_ClassRequest(void)
 
 static USB_Result USB_CDC_OnDataSent(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
 {
+  (void)EPx;
+  (void)Buffer;
+  (void)Length;
+
   /* Release "busy" flag and call user's handler */
   USB_CDCContext.CDC_SendDataStatus = USB_SUCCESS;
   return USB_CDC_HANDLE_DATA_SENT;
@@ -657,6 +644,8 @@ static USB_Result USB_CDC_OnDataReceive(USB_EP_TypeDef EPx, uint8_t* Buffer, uin
 {
   /* Call user's handler */
   USB_Result result = USB_CDC_HANDLE_DATA_RECEIVE(Buffer, Length);
+
+  (void)EPx;
 
   /* If handler returns USB_SUCCESS, wait for another portion. Otherwise, stop to receive
    * incoming data */
@@ -698,6 +687,8 @@ static USB_Result USB_CDC_OnDataReceive(USB_EP_TypeDef EPx, uint8_t* Buffer, uin
 static USB_Result USB_CDC_DoDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
 {
   USB_Result result;
+
+  (void)Length;
 
   switch (USB_CurrentSetupPacket.bRequest)
   {
@@ -743,6 +734,9 @@ static USB_Result USB_CDC_DoDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_
 
 USB_Result USB_CDC_DummyDataReceive(uint8_t* Buffer, uint32_t Length)
 {
+  (void)Buffer;
+  (void)Length;
+
   return USB_ERROR;
 }
 
@@ -776,6 +770,9 @@ USB_Result USB_CDC_DummyDataSent(void)
 
 USB_Result USB_CDC_DummySendEncapsulatedCMD(uint16_t wINDEX, uint16_t wLENGTH)
 {
+  (void)wINDEX;
+  (void)wLENGTH;
+
   return USB_ERROR;
 }
 
@@ -795,6 +792,9 @@ USB_Result USB_CDC_DummySendEncapsulatedCMD(uint16_t wINDEX, uint16_t wLENGTH)
 
 USB_Result USB_CDC_DummyGetEncapsulatedResp(uint16_t wINDEX, uint16_t wLENGTH)
 {
+  (void)wINDEX;
+  (void)wLENGTH;
+
   return USB_ERROR;
 }
 #endif /* USB_CDC_ENCAPSULATION_SUPPORTED */
@@ -814,6 +814,10 @@ USB_Result USB_CDC_DummyGetEncapsulatedResp(uint16_t wINDEX, uint16_t wLENGTH)
 
 USB_Result USB_CDC_DummyGetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t* DATA)
 {
+  (void)wVALUE;
+  (void)wINDEX;
+  (void)DATA;
+
   return USB_ERROR;
 }
 
@@ -831,6 +835,10 @@ USB_Result USB_CDC_DummyGetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_
 
 USB_Result USB_CDC_DummySetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t DATA)
 {
+  (void)wVALUE;
+  (void)wINDEX;
+  (void)DATA;
+
   return USB_ERROR;
 }
 
@@ -846,6 +854,9 @@ USB_Result USB_CDC_DummySetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_
 
 USB_Result USB_CDC_DummyClearCommFeature(uint16_t wVALUE, uint16_t wINDEX)
 {
+  (void)wVALUE;
+  (void)wINDEX;
+
   return USB_ERROR;
 }
 #endif /* USB_CDC_COMM_FEATURE_SUPPORTED */
@@ -864,6 +875,9 @@ USB_Result USB_CDC_DummyClearCommFeature(uint16_t wVALUE, uint16_t wINDEX)
 
 USB_Result USB_CDC_DummyGetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA)
 {
+  (void)wINDEX;
+  (void)DATA;
+
   return USB_ERROR;
 }
 
@@ -880,6 +894,9 @@ USB_Result USB_CDC_DummyGetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDe
 
 USB_Result USB_CDC_DummySetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA)
 {
+  (void)wINDEX;
+  (void)DATA;
+
   return USB_ERROR;
 }
 #endif /* USB_CDC_LINE_CODING_SUPPORTED */
@@ -900,6 +917,9 @@ USB_Result USB_CDC_DummySetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_
 
 USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX)
 {
+  (void)wVALUE;
+  (void)wINDEX;
+
   return USB_ERROR;
 }
 #endif /* USB_CDC_CONTROL_LINE_STATE_SUPPORTED */
@@ -917,6 +937,9 @@ USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX)
 
 USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX)
 {
+  (void)wVALUE;
+  (void)wINDEX;
+
   return USB_ERROR;
 }
 #endif /* USB_CDC_LINE_BREAK_SUPPORTED */
@@ -931,7 +954,7 @@ USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX)
 
 /** @} */ /* End of group MDR32F9Qx_StdPeriph_Driver */
 
-/******************* (C) COPYRIGHT 2011 Phyton *********
+/*
 *
 * END OF FILE MDR32F9Qx_usb_CDC.c */
 

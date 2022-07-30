@@ -1,25 +1,5 @@
 /**
-  ******************************************************************************
-  * @file	 MDR32F9Qx_arinc429R.h
-  * @author	 sidorov.a
-  * @version V1.4.0
-  * @date    15.04.2013
-  * @brief   This file contains all the functions prototypes for the
-  * 		 ARINC429R firmware library.
-  ******************************************************************************
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, MILANDR SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2013 Milandr </center></h2>
-  ******************************************************************************
-  * FILE MDR32F9Qx_arinc429R.h
+  * FILE MDR32F9Qx_arinc429r.h
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -31,6 +11,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_lib.h"
 
 /** @addtogroup __MDR32F9Qx_StdPeriph_Driver MDR32F9Qx Standard Peripherial Driver
@@ -98,14 +79,11 @@ typedef struct {
 #define ARINC429R_CHANNEL13		((uint32_t)0x0000000C)
 #define ARINC429R_CHANNEL14		((uint32_t)0x0000000D)
 
-#define IS_ARINC429R_CHANNEL(CHANNEL)		((CHANNEL >= ARINC429R_CHANNEL1) &&\
-										     (CHANNEL <= ARINC429R_CHANNEL14))
+#define IS_ARINC429R_CHANNEL(CHANNEL)		((CHANNEL) <= ARINC429R_CHANNEL14)
 #endif
 
 #if defined (USE_MDR1986VE1T)
-
-#define IS_ARINC429R_CHANNEL(CHANNEL)		((CHANNEL >= ARINC429R_CHANNEL1) &&\
-										     (CHANNEL <= ARINC429R_CHANNEL8))
+#define IS_ARINC429R_CHANNEL(CHANNEL)		((CHANNEL) <= ARINC429R_CHANNEL8)
 #endif
 
 
@@ -155,10 +133,10 @@ typedef struct {
   * @{
   */
 
-#define ARINC429R_ITMask_HF				((uint32_t)0x00000001)
-#define ARINC429R_ITMask_FF				((uint32_t)0x00000002)
-#define ARINC429R_ITMask_ER				((uint32_t)0x00000004)
-#define ARINC429R_ITMask_DR				((uint32_t)0x00000008)
+#define ARINC429R_ITMask_DR				((uint32_t)0x00000001)
+#define ARINC429R_ITMask_ER				((uint32_t)0x00000002)
+#define ARINC429R_ITMask_FF				((uint32_t)0x00000004)
+#define ARINC429R_ITMask_HF				((uint32_t)0x00000008)
 
 #define IS_ARINC429R_ITMask(ITMask)		((ITMask == ARINC429R_ITMask_HF) ||\
 										 (ITMask == ARINC429R_ITMask_FF) ||\
@@ -206,6 +184,6 @@ uint32_t ARINC429R_ReceiveData(void);
 
 #endif /* MDR32F9QX_ARINC429R_H_ */
 
-/******************* (C) COPYRIGHT 2013 Milandr ********************************
+/*
 *
-* END OF FILE MDR32F9Qx_arinc429R.h */
+* END OF FILE MDR32F9Qx_arinc429r.h */

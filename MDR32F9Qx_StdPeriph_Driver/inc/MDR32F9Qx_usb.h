@@ -1,23 +1,4 @@
 /**
-  ******************************************************************************
-  * @file    MDR32F9Qx_usb.h
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    01/02/2011
-  * @brief   This file contains all the functions prototypes for the USB
-  *          SFR access layer
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_usb.h
   */
 
@@ -30,6 +11,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_lib.h"
 
 /** @addtogroup __MDR32F9Qx_StdPeriph_Driver MDR32F9Qx Standard Peripherial Driver
@@ -57,7 +39,7 @@ typedef enum
   Num_USB_EndPoints
 }USB_EP_TypeDef;
 
-#define IS_USB_ENDPOINT(ENDPOINT)       (((ENDPOINT) >= 0) && ((ENDPOINT) < Num_USB_EndPoints))
+#define IS_USB_ENDPOINT(ENDPOINT)       ((ENDPOINT) < Num_USB_EndPoints)
 
 /**
   * @brief USB Clock Init Structure definition
@@ -557,18 +539,15 @@ typedef struct
 #define USB_SIS_SCRESETEV_Set                USB_SIS_SCRESETEV
 #define USB_SIS_SCSOFREC_Set                 USB_SIS_SCSOFREC
 #define USB_SIS_SCNAKSENT_Set                USB_SIS_SCNAKSENT
+#define USB_SIS_SCUSBON_Set                  USB_SIS_SCUSBON
 
-#define USB_SIS_Msk                          USB_SIS_SCTDONE_Set   | \
-                                             USB_SIS_SCRESUME_Set  | \
-                                             USB_SIS_SCRESETEV_Set | \
-                                             USB_SIS_SCSOFREC_Set  | \
-                                             USB_SIS_SCNAKSENT_Set
+#define USB_SIS_Msk                          (USB_SIS_SCTDONE_Set   | \
+                                              USB_SIS_SCRESUME_Set  | \
+                                              USB_SIS_SCRESETEV_Set | \
+                                              USB_SIS_SCSOFREC_Set  | \
+                                              USB_SIS_SCNAKSENT_Set)
 
-#define IS_USB_SIS_VALUE(VALUE)              (((VALUE) == USB_SIS_SCTDONE_Set)   || \
-                                              ((VALUE) == USB_SIS_SCRESUME_Set)  || \
-                                              ((VALUE) == USB_SIS_SCRESETEV_Set) || \
-                                              ((VALUE) == USB_SIS_SCSOFREC_Set)  || \
-                                              ((VALUE) == USB_SIS_SCNAKSENT_Set))
+#define IS_USB_SIS_VALUE(VALUE)              (!((VALUE) & ~USB_SIS_Msk))
 
 /** @} */ /* End of group USB_SIS_Values */
 
@@ -708,6 +687,6 @@ void     USB_SEPxToggleEPDATASEQ(USB_EP_TypeDef EndPointNumber);
 
 #endif /* __MDR32F9Qx_USB_H */
 
-/******************* (C) COPYRIGHT 2011 Phyton *********
+/*
 *
 * END OF FILE MDR32F9Qx_usb.h */

@@ -1,23 +1,4 @@
 /**
-  ******************************************************************************
-  * @file    MDR32F9Qx_ebc.h
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    16/02/2011
-  * @brief   This file contains all the functions prototypes for the EBC
-  *          firmware library.
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2010 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_ebc.h
   */
 
@@ -30,6 +11,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_lib.h"
 
 /** @addtogroup __MDR32F9Qx_StdPeriph_Driver MDR32F9Qx Standard Peripherial Driver
@@ -253,7 +235,7 @@ typedef struct
 
 #define EBC_WS_HOLD_CYCLES_MSK	0x07
 
-#define IS_EBC_EBC_WS_HOLD_CYCLES(EBC_WS_HOLD_CYCLES) (((EBC_WS_HOLD_CYCLES) & ~EBC_WS_HOLD_CYCLES_MSK) == 0 )
+#define IS_EBC_WS_HOLD_CYCLES(EBC_WS_HOLD_CYCLES) (((EBC_WS_HOLD_CYCLES) & ~EBC_WS_HOLD_CYCLES_MSK) == 0 )
 
 /** @} */ /* End of groupe EBC_WS_HOLD_CYCLE WS HOLD Cycles */
 
@@ -292,7 +274,7 @@ typedef struct
 
 /** @}*/ /* End of groupe EBC_MEM_REGIONx EBC MEM REGION */
 
-#define IS_EBC_WS_ACTIVE(WS_ACTIVE)				((WS_ACTIVE >= 0) && (WS_ACTIVE < 127))
+#define IS_EBC_WS_ACTIVE(WS_ACTIVE)				((WS_ACTIVE) < 127)
 
 #endif /* #if defined (USE_MDR1986VE3) || defined (USE_MDR1986VE1T)*/
 
@@ -332,7 +314,7 @@ FlagStatus EBC_GetBusyStatus(void);
 
 #endif /* __MDR32F9X_EBC_H */
 
-/******************* (C) COPYRIGHT 2010 Phyton *********************************
+/*
 *
 * END OF FILE MDR32F9Qx_ebc.h */
 

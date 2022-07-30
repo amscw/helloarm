@@ -1,23 +1,4 @@
 /**
-  ******************************************************************************
-  * @file    MDR32F9Qx_adc.h
-  * @author  Phyton Application Team
-  * @version V1.4.0
-  * @date    21/07/2011
-  * @brief   This file contains all the functions prototypes for the ADC
-  *          firmware library.
-  ******************************************************************************
-  * <br><br>
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, PHYTON SHALL NOT BE HELD LIABLE FOR ANY DIRECT, INDIRECT
-  * OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 Phyton</center></h2>
-  ******************************************************************************
   * FILE MDR32F9Qx_adc.h
   */
 
@@ -50,7 +31,7 @@ extern "C" {
   */
 
 typedef struct {
-#if defined (USE_MDR1986VE9x)
+#if defined (USE_MDR1986VE9x) || defined (USE_MDR1901VC1T)
 	uint32_t ADC_SynchronousMode; 		/*!< Enables or disables the ADC1, ADC2 synchronous mode operation.
 	 	 	 	 	 	 	 	 	 	 	 This parameter can be a value of @ref ADC_Synchronous_Mode */
 #endif
@@ -129,7 +110,7 @@ typedef struct
   * @{
   */
 
-#if defined (USE_MDR1986VE9x)
+#if defined (USE_MDR1986VE9x) || defined (USE_MDR1901VC1T)
 
 /** @defgroup ADC_Synchronous_Mode ADC Synchronous Mode
   * @{
@@ -149,7 +130,7 @@ typedef struct
   * @{
   */
 
-#define IS_ADC_START_DELAY_VALUE(VALUE) (((VALUE) >= 0) && ((VALUE) <= 15))
+#define IS_ADC_START_DELAY_VALUE(VALUE) ((VALUE) <= 15)
 
 /** @} */ /* End of group ADC_Start_Delay */
 
@@ -205,10 +186,10 @@ typedef struct
   * @{
   */
 
-#if defined (USE_MDR1986VE9x)
-	#define IS_ADC_VREF_TRIMMING_VALUE(VALUE) (((VALUE) >= 0) && ((VALUE) <= 0x0F))
+#if defined (USE_MDR1986VE9x) || defined (USE_MDR1901VC1T)
+	#define IS_ADC_VREF_TRIMMING_VALUE(VALUE) ((VALUE) <= 0x0F)
 #elif defined (USE_MDR1986VE3) || defined (USE_MDR1986VE1T)
-	#define IS_ADC_VREF_TRIMMING_VALUE(VALUE) (((VALUE) >= 0) && ((VALUE) <= 0x1F))
+	#define IS_ADC_VREF_TRIMMING_VALUE(VALUE) ((VALUE) <= 0x1F)
 #endif
 
 /** @} */ /* End of group ADC_Int_VRef_Trimming */
@@ -237,12 +218,12 @@ typedef struct
 
 /** @} */ /* End of group ADCx_Sampling_Mode */
 
-/** @defgroup ADCx_Channel_Switching ADC Channel Swithing configuration
+/** @defgroup ADCx_Channel_Switching ADC Channel Switching configuration
   * @{
   */
 
-#define ADC_CH_SWITCHING_Disable              (((uint32_t)0x0) << ADC1_CFG_REG_CHCH_Pos)    /*!< Disables Channel Swithing. */
-#define ADC_CH_SWITCHING_Enable               (((uint32_t)0x1) << ADC1_CFG_REG_CHCH_Pos)    /*!< Enables Channel Swithing. */
+#define ADC_CH_SWITCHING_Disable              (((uint32_t)0x0) << ADC1_CFG_REG_CHCH_Pos)    /*!< Disables Channel Switching. */
+#define ADC_CH_SWITCHING_Enable               (((uint32_t)0x1) << ADC1_CFG_REG_CHCH_Pos)    /*!< Enables Channel Switching. */
 
 #define IS_ADC_CH_SWITCHING_CONFIG(CONFIG) (((CONFIG) == ADC_CH_SWITCHING_Disable) || \
                                             ((CONFIG) == ADC_CH_SWITCHING_Enable ))
@@ -342,9 +323,7 @@ typedef struct
                                  ADC_CH_INT_VREF_MSK | \
                                  ADC_CH_TEMP_SENSOR_MSK)
 
-#define IS_ADC1_CH_MASK(MASK) ((((MASK) & ~ADC2_ALL_CH_MSK) == 0) || \
-                               ((MASK) == ADC_CH_INT_VREF_MSK)    || \
-                               ((MASK) == ADC_CH_TEMP_SENSOR_MSK))
+#define IS_ADC1_CH_MASK(MASK) (((MASK) & ~ADC1_ALL_CH_MSK) == 0)
 
 /** @} */ /* End of group ADCx_Channels */
 
@@ -358,7 +337,8 @@ typedef struct
 #define IS_ADC_LEVEL_CONTROL_CONFIG(CONFIG) (((CONFIG) == ADC_LEVEL_CONTROL_Disable) || \
                                              ((CONFIG) == ADC_LEVEL_CONTROL_Enable ))
 
-#define IS_ADC_VALUE(VALUE) (((VALUE) >= 0) && ((VALUE) <= 0x07FF))
+#define ADC_VALUE_MAX                        (0x0FFF)
+#define IS_ADC_VALUE(VALUE)                  ((VALUE) <= ADC_VALUE_MAX)
 
 /** @} */ /* End of group ADCx_Level_Control */
 
@@ -402,10 +382,7 @@ typedef struct
 #define ADC_CLK_div_512                       (((uint32_t)0x9) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 512.   */
 #define ADC_CLK_div_1024                      (((uint32_t)0xA) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 1024.  */
 #define ADC_CLK_div_2048                      (((uint32_t)0xB) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 2048.  */
-#define ADC_CLK_div_4096                      (((uint32_t)0xC) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 4096.  */
-#define ADC_CLK_div_8192                      (((uint32_t)0xD) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 8192.  */
-#define ADC_CLK_div_16384                     (((uint32_t)0xE) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 16384. */
-#define ADC_CLK_div_32768                     (((uint32_t)0xF) << ADC1_CFG_REG_DIVCLK_Pos) /*!< The input ADC clock devides by 32768. */
+
 
 #define IS_ADC_CLK_div_VALUE(VALUE) (((VALUE) == ADC_CLK_div_None ) || \
                                      ((VALUE) == ADC_CLK_div_2    ) || \
@@ -418,11 +395,7 @@ typedef struct
                                      ((VALUE) == ADC_CLK_div_256  ) || \
                                      ((VALUE) == ADC_CLK_div_512  ) || \
                                      ((VALUE) == ADC_CLK_div_1024 ) || \
-                                     ((VALUE) == ADC_CLK_div_2048 ) || \
-                                     ((VALUE) == ADC_CLK_div_4096 ) || \
-                                     ((VALUE) == ADC_CLK_div_8192 ) || \
-                                     ((VALUE) == ADC_CLK_div_16384) || \
-                                     ((VALUE) == ADC_CLK_div_32768))
+                                     ((VALUE) == ADC_CLK_div_2048 ))
 
 /** @} */ /* End of group ADCx_Prescaler */
 
@@ -430,7 +403,7 @@ typedef struct
   * @{
   */
 
-#define IS_ADC_DELAY_GO_VALUE(VALUE) (((VALUE) >= 0) && ((VALUE) <= 7))
+#define IS_ADC_DELAY_GO_VALUE(VALUE) ((VALUE) <= 7)
 
 /** @} */ /* End of group ADCx_Level_Control */
 
@@ -438,9 +411,31 @@ typedef struct
   * @{
   */
 
-#define ADCx_FLAG_OVERWRITE                   (((uint32_t)0x1) << ADC_STATUS_FLG_REG_OVERWRITE_Pos)
-#define ADCx_FLAG_OUT_OF_RANGE                (((uint32_t)0x1) << ADC_STATUS_FLG_REG_AWOIFEN_Pos)
-#define ADCx_FLAG_END_OF_CONVERSION           (((uint32_t)0x1) << ADC_STATUS_FLG_REG_EOCIF_Pos)
+#if defined ADC_STATUS_FLG_REG_OVERWRITE_Pos
+	#define ADCx_FLAG_OVERWRITE                   (((uint32_t)0x1) << ADC_STATUS_FLG_REG_OVERWRITE_Pos)
+#endif
+
+#if defined ADC1_STATUS_FLG_REG_OVERWRITE_Pos
+	#define ADCx_FLAG_OVERWRITE                   (((uint32_t)0x1) << ADC1_STATUS_FLG_REG_OVERWRITE_Pos)
+#endif
+
+#if defined (ADC_STATUS_FLG_REG_AWOIFEN_Pos)
+	#define ADCx_FLAG_OUT_OF_RANGE                (((uint32_t)0x1) << ADC_STATUS_FLG_REG_AWOIFEN_Pos)
+#endif
+
+#if defined (ADC1_STATUS_FLG_REG_AWOIFEN_Pos)
+	#define ADCx_FLAG_OUT_OF_RANGE                (((uint32_t)0x1) << ADC1_STATUS_FLG_REG_AWOIFEN_Pos)
+#endif
+
+#if defined (ADC_STATUS_FLG_REG_EOCIF_Pos)
+	#define ADCx_FLAG_END_OF_CONVERSION           (((uint32_t)0x1) << ADC_STATUS_FLG_REG_EOCIF_Pos)
+#endif
+
+#if defined (ADC1_STATUS_FLG_REG_EOCIF_Pos)
+	#define ADCx_FLAG_END_OF_CONVERSION           (((uint32_t)0x1) << ADC1_STATUS_FLG_REG_EOCIF_Pos)
+#endif
+
+
 
 #define IS_ADCx_STATUS_FLAG(FLAG) (((FLAG) == ADCx_FLAG_OVERWRITE        ) || \
                                    ((FLAG) == ADCx_FLAG_OUT_OF_RANGE     ) || \
@@ -453,7 +448,7 @@ typedef struct
 #define ADC2_FLAG_OUT_OF_RANGE                (ADCx_FLAG_OUT_OF_RANGE      << 16)
 #define ADC2_FLAG_END_OF_CONVERSION           (ADCx_FLAG_END_OF_CONVERSION << 16)
 
-#if defined  (USE_MDR1986VE9x)
+#if defined  (USE_MDR1986VE9x) || defined (USE_MDR1901VC1T)
 #define IS_ADC_STATUS_FLAG(FLAG) (((FLAG) == ADC1_FLAG_OVERWRITE        ) || \
                                   ((FLAG) == ADC1_FLAG_OUT_OF_RANGE     ) || \
                                   ((FLAG) == ADC1_FLAG_END_OF_CONVERSION) || \
@@ -477,15 +472,16 @@ typedef struct
 #define ADCx_IT_OUT_OF_RANGE               (((uint32_t)0x1) << ADC_STATUS_FLG_REG_AWOIFEN_Pos)
 #define ADCx_IT_END_OF_CONVERSION          (((uint32_t)0x1) << ADC_STATUS_FLG_REG_EOCIF_Pos)
 
-#define IS_ADCx_CONFIG_IT(IT)              (((IT) == ADCx_IT_OUT_OF_RANGE     ) || \
-                                            ((IT) == ADCx_IT_END_OF_CONVERSION))
+#define ADCx_IT_MASK            (ADCx_IT_OUT_OF_RANGE | ADCx_IT_END_OF_CONVERSION)
+#define IS_ADCx_CONFIG_IT(IT)   (((IT) & (~ADCx_IT_MASK)) == 0)
+
 
 #define ADC1_IT_OUT_OF_RANGE               (ADCx_IT_OUT_OF_RANGE      <<  0)
 #define ADC1_IT_END_OF_CONVERSION          (ADCx_IT_END_OF_CONVERSION <<  0)
 #define ADC2_IT_OUT_OF_RANGE               (ADCx_IT_OUT_OF_RANGE      << 16)
 #define ADC2_IT_END_OF_CONVERSION          (ADCx_IT_END_OF_CONVERSION << 16)
 
-#if defined  (USE_MDR1986VE9x)
+#if defined  (USE_MDR1986VE9x) || defined (USE_MDR1901VC1T)
 #define IS_ADC_CONFIG_IT(IT)              (((IT) == ADC1_IT_OUT_OF_RANGE     ) || \
                                            ((IT) == ADC1_IT_END_OF_CONVERSION) || \
                                            ((IT) == ADC2_IT_OUT_OF_RANGE     ) || \
@@ -550,8 +546,8 @@ void ADC1_OperationModeConfig(uint32_t SamplingMode, uint32_t SwitchingMode);
 void ADC2_OperationModeConfig(uint32_t SamplingMode, uint32_t SwitchingMode);
 void ADC1_SamplingModeConfig(uint32_t SamplingMode);
 void ADC2_SamplingModeConfig(uint32_t SamplingMode);
-void ADC1_ChannelSwithingConfig(uint32_t SwitchingMode);
-void ADC2_ChannelSwithingConfig(uint32_t SwitchingMode);
+void ADC1_ChannelSwitchingConfig(uint32_t SwitchingMode);
+void ADC2_ChannelSwitchingConfig(uint32_t SwitchingMode);
 
 void ADC1_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, uint32_t NewState);
 void ADC2_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, uint32_t NewState);
@@ -596,7 +592,7 @@ ITStatus ADC2_GetITStatus(uint32_t ADC_IT);
 
 #endif /* __MDR32F9QX_ADC_H */
 
-/******************* (C) COPYRIGHT 2011 Phyton *********************************
+/*
 *
 * END OF FILE MDR32F9Qx_adc.h */
 
