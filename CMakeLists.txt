@@ -7,12 +7,12 @@ set (LD "${CMAKE_SOURCE_DIR}/ldscripts/MDR32F9Qx.ld")
 
 add_subdirectory(CMSIS)
 add_subdirectory(MDR32F9Qx_StdPeriph_Driver)
-add_subdirectory(rtt)
+# add_subdirectory(rtt)
 # add_subdirectory(FreeRTOS)
 
 add_executable(${EXECUTABLE} 
     "src/main.cpp"
-    #"src/delay.c"
+    "src/delay.c"
     #"src/params.cpp" 
     #"src/pwm_timer.cpp" 
     #"src/screen.cpp" 
@@ -33,22 +33,23 @@ add_executable(${EXECUTABLE}
 
 target_include_directories(${EXECUTABLE} PRIVATE 
     "include/"
-    "include/OS/"
+    #"include/OS/"
     "CMSIS/Device/MDR32F9Qx/inc/"
+    "CMSIS/Device/MDR32F9Qx/startup/"
     "CMSIS/Core/"
     "MDR32F9Qx_StdPeriph_Driver/inc/"
-    "utils/bithacks/"
-    "utils/pinlist/"
-    "utils/typelist/"
-    "rtt/"
-    "FreeRTOS/Source/include/"
-    "FreeRTOS/Source/portable/GCC/ARM_CM3/"
+    #"utils/bithacks/"
+    #"utils/pinlist/"
+    #"utils/typelist/"
+    #"rtt/"
+    #"FreeRTOS/Source/include/"
+    #"FreeRTOS/Source/portable/GCC/ARM_CM3/"
 )
 
 target_link_libraries(${EXECUTABLE} 
     $<TARGET_OBJECTS:cmsis_o> 
     $<TARGET_OBJECTS:spd_o> 
-    $<TARGET_OBJECTS:rtt_o>
+    #$<TARGET_OBJECTS:rtt_o>
     #$<TARGET_OBJECTS:rtos_o>
     #$<TARGET_OBJECTS:rtosport_o>
 )
